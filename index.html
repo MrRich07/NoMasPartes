@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER FLEET | Gestión Vehicular</title>
+    <title>NoMasPartes | Gestión Vehicular</title>
     
     <!-- Fuentes: Orbitron (Títulos) y Roboto (Cuerpo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,7 @@
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS (CDN para prototipado rápido y funcional) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Configuración Tailwind personalizada -->
@@ -28,7 +28,8 @@
                             cyan: '#00f3ff',
                             magenta: '#bc13fe',
                             green: '#0aff00',
-                            red: '#ff003c'
+                            red: '#ff003c',
+                            yellow: '#facc15'
                         }
                     },
                     fontFamily: {
@@ -56,7 +57,6 @@
             overflow-x: hidden;
         }
 
-        /* Grid de fondo */
         .cyber-grid {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -67,7 +67,6 @@
             pointer-events: none;
         }
 
-        /* Glassmorphism Cards */
         .glass-panel {
             background: rgba(11, 11, 30, 0.6);
             backdrop-filter: blur(12px);
@@ -76,7 +75,6 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Bordes High Tech */
         .tech-border {
             position: relative;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
@@ -91,7 +89,6 @@
             z-index: 1;
         }
 
-        /* Inputs */
         .cyber-input {
             background: rgba(0, 0, 0, 0.4);
             border: none;
@@ -105,12 +102,10 @@
             box-shadow: 0 10px 20px -10px rgba(0, 243, 255, 0.2);
         }
         
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #050510; }
         ::-webkit-scrollbar-thumb { background: #bc13fe; border-radius: 4px; }
 
-        /* Animaciones */
         @keyframes holograph {
             0% { opacity: 0; transform: scale(0.95) translateY(10px); filter: blur(5px); }
             100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
@@ -131,7 +126,6 @@
             pointer-events: none;
         }
 
-        /* Checkbox personalizado */
         .cyber-checkbox:checked + div {
             background-color: rgba(0, 243, 255, 0.2);
             border-color: #00f3ff;
@@ -150,13 +144,19 @@
         <div class="flex items-center gap-3">
             <i class="fas fa-biohazard text-3xl text-cyber-cyan animate-pulse"></i>
             <div>
-                <h1 class="font-orbitron text-xl md:text-2xl font-bold tracking-widest text-white">NoMas<span class="text-cyber-magenta">Partes!!</span></h1>
-                <p class="text-xs text-cyber-cyan/70 tracking-widest uppercase">Sistema de Ingeniero ECCI</p>
+                <h1 class="font-orbitron text-xl md:text-2xl font-bold tracking-widest text-white">NoMas<span class="text-cyber-magenta">Partes!!!</span></h1>
+                <p class="text-xs text-cyber-cyan/70 tracking-widest uppercase">Sistema de Ingenieros ECCI</p>
             </div>
         </div>
-        <div id="user-info-display" class="hidden flex items-center gap-4">
+        <div id="user-info-display" class="hidden flex items-center gap-3 md:gap-4">
             <span id="display-username" class="font-orbitron text-cyber-green text-sm hidden md:block"></span>
-            <button onclick="logout()" class="text-cyber-red hover:text-white transition-colors border border-cyber-red/30 px-3 py-1 rounded hover:bg-cyber-red hover:shadow-neon-magenta">
+            
+            <!-- Botón Editar Perfil -->
+            <button onclick="loadUserProfile()" class="text-cyber-cyan hover:text-white transition-colors border border-cyber-cyan/30 px-3 py-1 rounded hover:bg-cyber-cyan/20 hover:shadow-neon-cyan" title="Editar Perfil">
+                <i class="fas fa-user-gear"></i>
+            </button>
+
+            <button onclick="logout()" class="text-cyber-red hover:text-white transition-colors border border-cyber-red/30 px-3 py-1 rounded hover:bg-cyber-red hover:shadow-neon-magenta" title="Cerrar Sesión">
                 <i class="fas fa-power-off"></i>
             </button>
         </div>
@@ -168,7 +168,6 @@
         <!-- PANTALLA 1: AUTH (LOGIN / REGISTER) -->
         <section id="view-auth" class="w-full max-w-4xl animate-holo">
             <div class="glass-panel rounded-xl p-1 overflow-hidden tech-border">
-                <!-- Tabs -->
                 <div class="flex font-orbitron">
                     <button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-4 text-center bg-cyber-cyan/10 text-cyber-cyan border-b-2 border-cyber-cyan transition-all">ENTRAR</button>
                     <button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-4 text-center text-gray-500 hover:text-white transition-all">REGISTRO</button>
@@ -205,53 +204,39 @@
                             <h3 class="font-orbitron text-cyber-magenta mb-2 text-sm">LICENCIA DE CONDUCCIÓN</h3>
                             <p class="text-xs text-gray-500 mb-4">Revise la parte posterior de su licencia física para habilitar las categorías.</p>
                             
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="license-container">
-                                <!-- Categorías generadas dinámicamente o estáticas -->
-                                <!-- A1 -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div class="relative">
                                     <label class="flex items-center cursor-pointer gap-2">
                                         <input type="checkbox" class="cyber-checkbox peer sr-only" onchange="toggleDateInput('date-a1')">
-                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center">
-                                            <i class="fas fa-check text-black text-xs"></i>
-                                        </div>
+                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center"><i class="fas fa-check text-black text-xs"></i></div>
                                         <span class="font-orbitron text-sm">A1</span>
                                     </label>
                                     <input type="date" id="date-a1" class="hidden w-full mt-2 text-xs bg-black border border-gray-600 rounded p-1 text-white focus:border-cyber-cyan outline-none">
                                 </div>
-                                <!-- A2 -->
                                 <div class="relative">
                                     <label class="flex items-center cursor-pointer gap-2">
                                         <input type="checkbox" class="cyber-checkbox peer sr-only" onchange="toggleDateInput('date-a2')">
-                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center">
-                                            <i class="fas fa-check text-black text-xs"></i>
-                                        </div>
+                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center"><i class="fas fa-check text-black text-xs"></i></div>
                                         <span class="font-orbitron text-sm">A2</span>
                                     </label>
                                     <input type="date" id="date-a2" class="hidden w-full mt-2 text-xs bg-black border border-gray-600 rounded p-1 text-white focus:border-cyber-cyan outline-none">
                                 </div>
-                                <!-- B1 -->
                                 <div class="relative">
                                     <label class="flex items-center cursor-pointer gap-2">
                                         <input type="checkbox" class="cyber-checkbox peer sr-only" onchange="toggleDateInput('date-b1')">
-                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center">
-                                            <i class="fas fa-check text-black text-xs"></i>
-                                        </div>
+                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center"><i class="fas fa-check text-black text-xs"></i></div>
                                         <span class="font-orbitron text-sm">B1</span>
                                     </label>
                                     <input type="date" id="date-b1" class="hidden w-full mt-2 text-xs bg-black border border-gray-600 rounded p-1 text-white focus:border-cyber-cyan outline-none">
                                 </div>
-                                <!-- C1 -->
                                 <div class="relative">
                                     <label class="flex items-center cursor-pointer gap-2">
                                         <input type="checkbox" class="cyber-checkbox peer sr-only" onchange="toggleDateInput('date-c1')">
-                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center">
-                                            <i class="fas fa-check text-black text-xs"></i>
-                                        </div>
+                                        <div class="w-6 h-6 border border-gray-500 rounded peer-checked:bg-cyber-cyan peer-checked:border-cyber-cyan transition-all flex items-center justify-center"><i class="fas fa-check text-black text-xs"></i></div>
                                         <span class="font-orbitron text-sm">C1</span>
                                     </label>
                                     <input type="date" id="date-c1" class="hidden w-full mt-2 text-xs bg-black border border-gray-600 rounded p-1 text-white focus:border-cyber-cyan outline-none">
                                 </div>
-                                <!-- Otros simplificados para el ejemplo -->
                             </div>
                         </div>
 
@@ -263,8 +248,50 @@
             </div>
         </section>
 
+        <!-- PANTALLA: EDITAR PERFIL DE USUARIO -->
+        <section id="view-edit-profile" class="hidden-view w-full max-w-3xl animate-holo">
+            <div class="glass-panel rounded-xl p-8 tech-border relative">
+                <button onclick="showView('dashboard')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+                <h2 class="text-2xl font-orbitron text-cyber-cyan mb-6 border-b border-gray-700 pb-2">CONFIGURACIÓN DE PERFIL</h2>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Nombre</label>
+                            <input type="text" id="edit-name" class="w-full p-3 cyber-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Apellido</label>
+                            <input type="text" id="edit-lastname" class="w-full p-3 cyber-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Email</label>
+                            <input type="email" id="edit-email" class="w-full p-3 cyber-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Teléfono</label>
+                            <input type="tel" id="edit-phone" class="w-full p-3 cyber-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Usuario</label>
+                            <input type="text" id="edit-user" class="w-full p-3 cyber-input" disabled title="No se puede cambiar el ID neural">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-cyber-magenta mb-1">Nueva Contraseña</label>
+                            <input type="password" id="edit-pass" placeholder="(Dejar en blanco para no cambiar)" class="w-full p-3 cyber-input">
+                        </div>
+                    </div>
+
+                    <button onclick="handleProfileUpdate()" class="w-full mt-6 bg-cyber-cyan/20 hover:bg-cyber-cyan text-cyber-cyan hover:text-black border border-cyber-cyan font-orbitron font-bold py-4 px-6 rounded transition-all hover:shadow-neon-cyan uppercase tracking-wider">
+                        <i class="fas fa-save mr-2"></i> ACTUALIZAR DATOS
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- PANTALLA 2: SELECCIÓN DE VEHÍCULO -->
         <section id="view-select" class="hidden-view w-full max-w-5xl animate-holo text-center">
+            <button onclick="showView('dashboard')" class="absolute top-0 left-0 text-gray-500 hover:text-white p-4"><i class="fas fa-arrow-left mr-2"></i>Volver al Dashboard</button>
             <h2 class="text-3xl font-orbitron font-bold text-white mb-10 glow-text">SELECCIONAR TIPO DE VEHÍCULO</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Opción Moto -->
@@ -272,23 +299,21 @@
                     <div class="absolute inset-0 bg-cyber-cyan/5 group-hover:bg-cyber-cyan/10 transition-all"></div>
                     <i class="fas fa-motorcycle text-8xl text-gray-500 group-hover:text-cyber-cyan transition-all mb-6 transform group-hover:scale-110 duration-300"></i>
                     <h3 class="text-2xl font-orbitron group-hover:text-cyber-cyan">MOTOCICLETA</h3>
-                    <div class="absolute bottom-0 w-full h-1 bg-cyber-cyan transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
                 <!-- Opción Carro -->
                 <div onclick="selectVehicleType('carro')" class="group cursor-pointer relative h-80 glass-panel rounded-2xl border border-transparent hover:border-cyber-magenta transition-all duration-500 flex flex-col items-center justify-center overflow-hidden">
                     <div class="absolute inset-0 bg-cyber-magenta/5 group-hover:bg-cyber-magenta/10 transition-all"></div>
                     <i class="fas fa-car text-8xl text-gray-500 group-hover:text-cyber-magenta transition-all mb-6 transform group-hover:scale-110 duration-300"></i>
                     <h3 class="text-2xl font-orbitron group-hover:text-cyber-magenta">AUTOMÓVIL</h3>
-                    <div class="absolute bottom-0 w-full h-1 bg-cyber-magenta transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
             </div>
         </section>
 
-        <!-- PANTALLA 3: FORMULARIO VEHÍCULO -->
+        <!-- PANTALLA 3: FORMULARIO VEHÍCULO (CREAR Y EDITAR) -->
         <section id="view-form" class="hidden-view w-full max-w-2xl animate-holo">
             <div class="glass-panel rounded-xl p-8 tech-border relative">
-                <button onclick="showView('select')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
-                <h2 class="text-2xl font-orbitron text-cyber-cyan mb-6 border-b border-gray-700 pb-2">REGISTRO DE UNIDAD <span id="selected-type-display" class="text-white text-sm ml-2 bg-gray-800 px-2 py-1 rounded"></span></h2>
+                <button onclick="cancelVehicleEdit()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+                <h2 class="text-2xl font-orbitron text-cyber-cyan mb-6 border-b border-gray-700 pb-2"><span id="form-title-action">REGISTRO</span> DE UNIDAD <span id="selected-type-display" class="text-white text-sm ml-2 bg-gray-800 px-2 py-1 rounded"></span></h2>
                 
                 <form id="vehicle-form" onsubmit="handleVehicleSubmit(event)" class="space-y-5">
                     <div class="grid grid-cols-2 gap-4">
@@ -325,7 +350,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-8 bg-cyber-green/20 hover:bg-cyber-green text-cyber-green hover:text-black border border-cyber-green font-orbitron font-bold py-4 rounded transition-all hover:shadow-[0_0_15px_#0aff00]">
+                    <button type="submit" id="btn-vehicle-submit" class="w-full mt-8 bg-cyber-green/20 hover:bg-cyber-green text-cyber-green hover:text-black border border-cyber-green font-orbitron font-bold py-4 rounded transition-all hover:shadow-[0_0_15px_#0aff00]">
                         <i class="fas fa-save mr-2"></i> GUARDAR UNIDAD
                     </button>
                 </form>
@@ -344,53 +369,43 @@
                 </button>
             </div>
 
-            <!-- Grid de Vehículos -->
-            <div id="vehicle-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Las tarjetas se inyectan aquí vía JS -->
-            </div>
+            <div id="vehicle-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
 
-            <!-- Estado Vacío -->
             <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 text-gray-600">
                 <i class="fas fa-database text-6xl mb-4 opacity-50"></i>
                 <p class="font-orbitron">No se detectan unidades en el sistema.</p>
             </div>
         </section>
-
     </main>
 
     <footer class="text-center p-4 text-xs text-gray-600 font-orbitron">
-        Sistema de Ingenieros ECCI
+        CYBER FLEET SYSTEMS &copy; 2077
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- ESTADO Y CONFIGURACIÓN ---
         const STORAGE_KEY_USER = 'cyber_fleet_user';
         const STORAGE_KEY_VEHICLES = 'cyber_fleet_vehicles';
         
         let currentUser = null;
         let currentVehicleType = '';
+        let editingVehicleId = null; // Estado para controlar si se edita
 
-        // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
         });
 
-        // --- NAVEGACIÓN / VISTAS ---
         function showView(viewId) {
-            // Ocultar todas las vistas
             document.querySelectorAll('section[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
-            // Mostrar la deseada
             const target = document.getElementById(`view-${viewId}`);
             if(target) {
                 target.classList.remove('hidden-view');
-                target.classList.remove('animate-holo'); // Reset animación
-                void target.offsetWidth; // Trigger reflow
+                target.classList.remove('animate-holo');
+                void target.offsetWidth;
                 target.classList.add('animate-holo');
             }
         }
 
-        // --- AUTH LOGIC ---
         function switchAuthMode(mode) {
             const loginForm = document.getElementById('form-login');
             const regForm = document.getElementById('form-register');
@@ -420,53 +435,106 @@
                 input.classList.remove('hidden');
             } else {
                 input.classList.add('hidden');
-                input.value = ''; // Limpiar si se desmarca
+                input.value = ''; 
             }
         }
 
         function handleLogin() {
-            // Prototipo: Bypass validación real
             const user = document.getElementById('login-user').value;
-            if(!user) {
-                alert("INGRESE CREDENCIALES DE ACCESO");
+            const pass = document.getElementById('login-pass').value;
+
+            if(!user || !pass) {
+                alert("INGRESE USUARIO Y CONTRASEÑA");
                 return;
             }
             
-            // Simular login exitoso buscando en localStorage o creando sesión temporal
             const storedUser = JSON.parse(localStorage.getItem(STORAGE_KEY_USER));
             
-            if (storedUser) {
+            if (storedUser && storedUser.username === user && storedUser.password === pass) {
                 currentUser = storedUser;
+                document.getElementById('login-user').value = '';
+                document.getElementById('login-pass').value = '';
+                initSession();
             } else {
-                // Si no existe usuario registrado, creamos uno temporal para la sesión
-                currentUser = { username: user, name: 'Invitado' };
+                alert("DATOS INCORRECTOS: ACCESO DENEGADO");
             }
-            
-            initSession();
         }
 
         function handleRegister() {
             const name = document.getElementById('reg-name').value;
             const user = document.getElementById('reg-user').value;
+            const pass = document.getElementById('reg-pass').value;
             
-            if(!name || !user) {
-                alert("CAMPOS OBLIGATORIOS INCOMPLETOS");
+            if(!name || !user || !pass) {
+                alert("CAMPOS OBLIGATORIOS INCOMPLETOS (NOMBRE, USUARIO, CONTRASEÑA)");
                 return;
             }
 
             const newUser = {
                 name: name,
                 lastname: document.getElementById('reg-lastname').value,
+                email: document.getElementById('reg-email').value,
+                phone: document.getElementById('reg-phone').value,
                 username: user,
-                // En una app real, guardaríamos qué licencias tiene activas
+                password: pass
             };
 
             localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
             currentUser = newUser;
             
-            // Flujo: Registro -> Selección de Vehículo
             alert("USUARIO REGISTRADO EN LA RED NEURAL");
-            initSession(true); // true = ir a selección
+            
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-lastname').value = '';
+            document.getElementById('reg-email').value = '';
+            document.getElementById('reg-phone').value = '';
+            document.getElementById('reg-user').value = '';
+            document.getElementById('reg-pass').value = '';
+            
+            initSession(true); 
+        }
+
+        // --- LOGICA DE EDICIÓN DE PERFIL ---
+        function loadUserProfile() {
+            if (!currentUser) return;
+            
+            document.getElementById('edit-name').value = currentUser.name || '';
+            document.getElementById('edit-lastname').value = currentUser.lastname || '';
+            document.getElementById('edit-email').value = currentUser.email || '';
+            document.getElementById('edit-phone').value = currentUser.phone || '';
+            document.getElementById('edit-user').value = currentUser.username || '';
+            document.getElementById('edit-pass').value = ''; // Limpio por seguridad
+
+            showView('edit-profile');
+        }
+
+        function handleProfileUpdate() {
+            const newName = document.getElementById('edit-name').value;
+            const newLastname = document.getElementById('edit-lastname').value;
+            const newEmail = document.getElementById('edit-email').value;
+            const newPhone = document.getElementById('edit-phone').value;
+            const newPass = document.getElementById('edit-pass').value;
+
+            if (!newName) {
+                alert("El nombre es obligatorio");
+                return;
+            }
+
+            // Actualizar objeto usuario
+            currentUser.name = newName;
+            currentUser.lastname = newLastname;
+            currentUser.email = newEmail;
+            currentUser.phone = newPhone;
+            if (newPass) {
+                currentUser.password = newPass;
+            }
+
+            // Guardar en Storage
+            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+            
+            alert("PERFIL ACTUALIZADO CORRECTAMENTE");
+            document.getElementById('display-username').textContent = `CMD: ${currentUser.username.toUpperCase()}`;
+            showView('dashboard');
         }
 
         function initSession(forceSelection = false) {
@@ -493,18 +561,57 @@
         }
 
         function checkAuth() {
-            // Comprobar si venimos de un reload
-            // Para este prototipo, siempre pide login al refrescar por seguridad,
-            // pero los datos persisten.
             showView('auth');
         }
 
-        // --- LÓGICA DE VEHÍCULOS ---
+        // --- LÓGICA DE VEHÍCULOS (CREAR Y EDITAR) ---
         function selectVehicleType(type) {
             currentVehicleType = type;
+            editingVehicleId = null; // Modo crear
+            
+            // UI Reset para modo crear
+            document.getElementById('form-title-action').textContent = "REGISTRO";
+            document.getElementById('btn-vehicle-submit').innerHTML = '<i class="fas fa-save mr-2"></i> GUARDAR UNIDAD';
             document.getElementById('selected-type-display').textContent = type.toUpperCase();
-            document.getElementById('vehicle-form').reset(); // Limpiar form
+            document.getElementById('vehicle-form').reset();
+            
             showView('form');
+        }
+
+        function editVehicle(id) {
+            const vehicles = getVehicles();
+            const vehicle = vehicles.find(v => v.id === id);
+            
+            if (!vehicle) return;
+
+            editingVehicleId = id;
+            currentVehicleType = vehicle.type;
+
+            // UI Setup para modo editar
+            document.getElementById('form-title-action').textContent = "EDICIÓN";
+            document.getElementById('btn-vehicle-submit').innerHTML = '<i class="fas fa-sync mr-2"></i> ACTUALIZAR DATOS';
+            document.getElementById('selected-type-display').textContent = vehicle.type.toUpperCase();
+
+            // Llenar formulario
+            document.getElementById('v-brand').value = vehicle.brand;
+            document.getElementById('v-ref').value = vehicle.ref;
+            document.getElementById('v-plate').value = vehicle.plate;
+            document.getElementById('v-model').value = vehicle.model;
+            document.getElementById('v-soat').value = vehicle.soatDate;
+            document.getElementById('v-tecno').value = vehicle.tecnoDate;
+            document.getElementById('v-maint-date').value = vehicle.maintDate;
+            document.getElementById('v-interval').value = vehicle.interval;
+            document.getElementById('v-daily').value = vehicle.dailyKm;
+
+            showView('form');
+        }
+
+        function cancelVehicleEdit() {
+            if (getVehicles().length > 0) {
+                showView('dashboard');
+            } else {
+                showView('select');
+            }
         }
 
         function getVehicles() {
@@ -514,8 +621,8 @@
         function handleVehicleSubmit(e) {
             e.preventDefault();
             
-            const vehicle = {
-                id: Date.now(), // ID único simple
+            const vehicleData = {
+                id: editingVehicleId ? editingVehicleId : Date.now(), // Mantener ID si edita, nuevo si crea
                 type: currentVehicleType,
                 brand: document.getElementById('v-brand').value,
                 ref: document.getElementById('v-ref').value,
@@ -528,16 +635,27 @@
                 dailyKm: parseInt(document.getElementById('v-daily').value)
             };
 
-            const vehicles = getVehicles();
+            let vehicles = getVehicles();
             
-            if (vehicles.length >= 4) {
-                alert("ALERTA: CAPACIDAD DE HANGAR ALCANZADA (MAX 4)");
-                return;
+            if (editingVehicleId) {
+                // Actualizar existente
+                const index = vehicles.findIndex(v => v.id === editingVehicleId);
+                if (index !== -1) {
+                    vehicles[index] = vehicleData;
+                    alert("DATOS DE UNIDAD ACTUALIZADOS");
+                }
+            } else {
+                // Crear nuevo
+                if (vehicles.length >= 4) {
+                    alert("ALERTA: CAPACIDAD DE HANGAR ALCANZADA (MAX 4)");
+                    return;
+                }
+                vehicles.push(vehicleData);
             }
 
-            vehicles.push(vehicle);
             localStorage.setItem(STORAGE_KEY_VEHICLES, JSON.stringify(vehicles));
             
+            editingVehicleId = null; // Reset
             renderDashboard();
             showView('dashboard');
         }
@@ -545,19 +663,14 @@
         // --- DASHBOARD & CÁLCULOS ---
         function addDays(dateStr, days) {
             const result = new Date(dateStr);
-            // Ajuste por zona horaria simple para evitar desfase
             result.setDate(result.getDate() + days);
             return result;
         }
 
-        function formatDate(dateObj) {
-            return dateObj.toISOString().split('T')[0];
-        }
-
         function getStatusColor(daysLeft) {
-            if (daysLeft < 0) return 'text-cyber-red animate-pulse'; // Vencido
-            if (daysLeft < 30) return 'text-yellow-400'; // Próximo
-            return 'text-cyber-green'; // OK
+            if (daysLeft < 0) return 'text-cyber-red animate-pulse';
+            if (daysLeft < 30) return 'text-yellow-400';
+            return 'text-cyber-green';
         }
 
         function renderDashboard() {
@@ -568,7 +681,6 @@
 
             grid.innerHTML = '';
 
-            // Controlar botón añadir
             if (vehicles.length >= 4) {
                 btnAdd.classList.add('hidden');
             } else {
@@ -583,30 +695,25 @@
             emptyState.classList.add('hidden');
 
             vehicles.forEach(v => {
-                // Cálculos
                 const soatStart = new Date(v.soatDate);
-                const tecnoStart = new Date(v.tecnoDate); // Asumimos que es fecha de realización
+                const tecnoStart = new Date(v.tecnoDate);
                 const maintStart = new Date(v.maintDate);
 
-                // Vencimientos (1 año = 365 días aprox)
                 const soatExp = new Date(soatStart); soatExp.setFullYear(soatExp.getFullYear() + 1);
                 const tecnoExp = new Date(tecnoStart); tecnoExp.setFullYear(tecnoExp.getFullYear() + 1);
 
-                // Mantenimiento: (Intervalo / Diario) = Días para el siguiente
                 const daysToMaint = Math.floor(v.interval / v.dailyKm);
-                const maintExp = addDays(v.maintDate, daysToMaint + 1); // +1 para compensar timezone offset en visualización simple
+                const maintExp = addDays(v.maintDate, daysToMaint + 1);
 
                 const today = new Date();
                 const daysLeftSoat = Math.ceil((soatExp - today) / (1000 * 60 * 60 * 24));
                 const daysLeftMaint = Math.ceil((maintExp - today) / (1000 * 60 * 60 * 24));
 
-                // Icono según tipo
                 const iconClass = v.type === 'moto' ? 'fa-motorcycle' : 'fa-car';
                 const borderColor = v.type === 'moto' ? 'border-cyber-cyan' : 'border-cyber-magenta';
                 const shadowColor = v.type === 'moto' ? 'shadow-neon-cyan' : 'shadow-neon-magenta';
                 const accentColor = v.type === 'moto' ? 'text-cyber-cyan' : 'text-cyber-magenta';
 
-                // Template HTML de Tarjeta
                 const card = document.createElement('div');
                 card.className = `glass-panel p-5 rounded-lg border-t-2 ${borderColor} hover:${shadowColor} transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden`;
                 
@@ -621,8 +728,13 @@
                                 <h3 class="text-xl font-orbitron font-bold text-white">${v.brand} ${v.ref}</h3>
                                 <p class="text-sm text-gray-400">${v.model}</p>
                             </div>
-                            <div class="bg-black/50 px-3 py-1 rounded border border-gray-700">
-                                <span class="font-mono font-bold text-white tracking-wider">${v.plate}</span>
+                            <div class="flex flex-col items-end gap-2">
+                                <div class="bg-black/50 px-3 py-1 rounded border border-gray-700">
+                                    <span class="font-mono font-bold text-white tracking-wider">${v.plate}</span>
+                                </div>
+                                <button onclick="editVehicle(${v.id})" class="text-xs text-cyber-cyan hover:text-white border border-cyber-cyan/30 hover:bg-cyber-cyan/20 px-2 py-1 rounded transition-colors">
+                                    <i class="fas fa-pen mr-1"></i> EDITAR
+                                </button>
                             </div>
                         </div>
 
